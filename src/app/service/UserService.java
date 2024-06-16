@@ -29,9 +29,9 @@ public class UserService {
         }
     }
 
-    public User getUser(User user) throws Exception {
+    public User getUser(int id) throws Exception {
         try{
-            return userDAO.getUser(user);
+            return userDAO.getUser(id);
         }catch(Exception e){
             throw new Exception("Error getting user");
         }

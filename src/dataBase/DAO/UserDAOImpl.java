@@ -18,7 +18,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public void createUser(User user) {
         try{
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Users.user (name, lastname, email, DNI, birthDate) VALUES (?,?,?,?,?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Users (name, lastname, email, DNI, birthDate) VALUES (?,?,?,?,?)");
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getEmail());
@@ -31,10 +31,10 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getUser(User user) {
+    public User getUser(int id) {
         try{
-            PreparedStatement preparedStatement =connection.prepareStatement("SELECT * FROM Users.user WHERE id = ?");
-            preparedStatement.setInt(1, user.getUserID());
+            PreparedStatement preparedStatement =connection.prepareStatement("SELECT * FROM Users WHERE UserID = ?");
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
                 String name = resultSet.getString("name");
@@ -55,7 +55,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public void deleteUser(int id) {
         try{
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Users.user WHERE id = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Users WHERE id = ?");
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         }catch(SQLException e){
@@ -66,7 +66,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public void updateUser(User user, int id) {
         try{
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Users.user SET name = ? , lastName = ? , email = ? , DNI = ? , birthDate = ? WHERE UserID = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Users SET name = ? , lastName = ? , email = ? , DNI = ? , birthDate = ? WHERE UserID = ?");
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getEmail());
@@ -83,7 +83,7 @@ public class UserDAOImpl implements UserDAO {
     public List<User> getUsers() {
         List<User> users = new ArrayList<>();
         try{
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users.user");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users");
             ResultSet userResult = preparedStatement.executeQuery();
             while(userResult.next()){
                 String name = userResult.getString("name");

@@ -11,7 +11,7 @@ public class User {
     private String email;
     private int DNI;
     private Date birthDate;
-    private TypeUser typeUser;
+   // private TypeUser typeUser;
 
     public User(int userID, String name, String lastName, String email, int DNI, Date birthDate) {
         this.UserID = userID;
@@ -20,7 +20,7 @@ public class User {
         this.birthDate = birthDate;
         this.DNI = DNI;
         this.email = email;
-        this.setTypeUser(typeUser);
+        //this.setTypeUser(typeUser);
     }
 
     public User() {
@@ -50,13 +50,13 @@ public class User {
         return birthDate;
     }
 
-    public TypeUser getTypeUser() {
+   /* public TypeUser getTypeUser() {
         return typeUser;
     }
 
     public void setTypeUser(TypeUser typeUser) {
         this.typeUser = typeUser;
-    }
+    }*/
 
     public void setUserID(int userID) {
         UserID = userID;

@@ -24,12 +24,6 @@ public class PatientPanel extends JPanel {
         formPanel.add(new JLabel("Last name:"));
         JTextField lastNameField = new JTextField();
         formPanel.add(lastNameField);
-        formPanel.add(new JLabel("User name:"));
-        JTextField userNameField = new JTextField();
-        formPanel.add(userNameField);
-        formPanel.add(new JLabel("Password:"));
-        JTextField passwordField = new JTextField();
-        formPanel.add(passwordField);
         formPanel.add(new JLabel("Email:"));
         JTextField emailField = new JTextField();
         formPanel.add(emailField);

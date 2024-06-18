@@ -1,10 +1,14 @@
 package graficInterface.panel;
 
+import app.service.DoctorService;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class DoctorMainPanel extends JPanel {
     public DoctorMainPanel(CardLayout cardLayout, JPanel mainPanel) {
+
+
         setLayout(new BorderLayout());
 
         // Paneles

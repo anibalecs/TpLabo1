@@ -1,12 +1,13 @@
 package graficInterface;
 
+import app.service.DoctorService;
 import graficInterface.panel.*;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MedicalTurnerApp {
-    public static void main(String[] args){
+    public static void startPanel(){
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Medical Turner");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -29,4 +30,8 @@ public class MedicalTurnerApp {
             cardLayout.show(mainPanel, "LogInPanel");
         });
     }
+
+    /*public static void main(String[] args) {
+        startPanel();
+    }*/
 }

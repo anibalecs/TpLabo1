@@ -2,8 +2,6 @@ package app.service;
 
 import dataBase.DAO.UserDAO;
 import app.model.User;
-
-import java.sql.SQLException;
 import java.util.List;
 
 public class UserService {

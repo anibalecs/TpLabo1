@@ -1,15 +1,13 @@
 package app.service;
 
-import app.model.User;
 import app.model.Doctor;
 import dataBase.DAO.DoctorDAO;
-
 import java.util.List;
 
 public class DoctorService {
     private DoctorDAO doctorDAO;
 
-    public DoctorService(DoctorDAO doctorDAO) {
+    public DoctorService(DoctorDAO doctorDAO){
         this.doctorDAO = doctorDAO;
     }
 

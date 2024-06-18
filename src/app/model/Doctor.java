@@ -12,6 +12,11 @@ public class Doctor extends User{
         this.consultationCost = consultationCost;
     }
 
+    public Doctor(String name, String lastName, String email, int DNI, Date birthDate, double consultationCost) {
+        super(name, lastName, email, DNI, birthDate);
+        this.consultationCost = consultationCost;
+    }
+
     public Doctor() {
     }
 

@@ -3,19 +3,14 @@ package dataBase.DAO;
 import app.model.Doctor;
 import app.model.User;
 import app.service.UserService;
-import dataBase.DAO.DoctorDAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DoctorDAOImpl implements DoctorDAO{
     private Connection connection;
     private UserService userService;
-
-
 
     public DoctorDAOImpl(Connection connection, UserService userService) {
         this.connection = connection;
@@ -23,11 +18,11 @@ public class DoctorDAOImpl implements DoctorDAO{
     }
 
     @Override
-    public void createDoctor(Doctor doctor) {
+    public void createDoctor(Doctor doctor){
         try{
             userService.createUser(doctor);
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Doctors (doctorID, consultationCost) VALUES (?,?)");
-            preparedStatement.setInt(1, doctor.getDoctorID());
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Doctors (userID, consultationCost) VALUES (?,?)");
+            preparedStatement.setInt(1, doctor.getUserID());
             preparedStatement.setDouble(2, doctor.getConsultationCost());
             preparedStatement.executeUpdate();
         }catch (Exception e) {
@@ -79,6 +74,21 @@ public class DoctorDAOImpl implements DoctorDAO{
 
     @Override
     public List<Doctor> getDoctors() {
-        
+        List<Doctor> doctors = new ArrayList<>();
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Doctors");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                int doctorID = resultSet.getInt("doctorID");
+                double consultationCost =resultSet.getDouble("consultationCost");
+                User user = userService.getUser(doctorID);
+                if(user != null){
+                    doctors.add(new Doctor(user.getUserID(), user.getName(), user.getLastName(), user.getEmail(), user.getDNI(), user.getBirthDate(), doctorID, consultationCost));
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return doctors;
     }
 }

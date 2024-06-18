@@ -1,26 +1,21 @@
 package graficInterface.panel;
 
-import app.service.DoctorService;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class DoctorMainPanel extends JPanel {
     public DoctorMainPanel(CardLayout cardLayout, JPanel mainPanel) {
 
-
         setLayout(new BorderLayout());
 
         // Paneles
         JPanel doctorPanel = new JPanel(new CardLayout());
 
-        // Agrega paneles para las diferentes funcionalidades
+        // Agrega diferentes paneles
         doctorPanel.add(new DoctorPanel(), "Doctors");
         doctorPanel.add(new PatientPanel(), "Patients");
         doctorPanel.add(new ShiftPanel(), "Shifts");
         doctorPanel.add(new ReportPanel(), "Reports");
-
-        add(doctorPanel, BorderLayout.CENTER);
 
         // Menu
         JMenuBar menuBar = new JMenuBar();

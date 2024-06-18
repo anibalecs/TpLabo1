@@ -85,7 +85,7 @@ public class DoctorPanel extends JPanel{
         JTextField birthDateField = new JTextField(20);
         formPanel.add(birthDateField, gbc);
 
-        // Botón de agregar médico
+        // Boton de agregar medico
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 4;
@@ -101,9 +101,16 @@ public class DoctorPanel extends JPanel{
         JButton deleteButton = new JButton("Delete doctor");
         formPanel.add(deleteButton, gbc);
 
+        // Boton de actualizar medico
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 4;
+        gbc.anchor = GridBagConstraints.CENTER;
+        JButton updateButton = new JButton("Update doctor");
+        formPanel.add(updateButton, gbc);
+
         add(formPanel, BorderLayout.SOUTH);
 
-        // Listener para el botón de agregar médico
         addButton.addActionListener(e -> {
             String name =  nameField.getText();
             String lastName = lastNameField.getText();
@@ -125,6 +132,7 @@ public class DoctorPanel extends JPanel{
             try {
                 doctorService.createDoctor(newDoctor);
                 updateTable();
+                JOptionPane.showMessageDialog(this, "Doctor created successfully", "Sucess", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Error creating doctor: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -145,6 +153,21 @@ public class DoctorPanel extends JPanel{
             }
         });
 
+        updateButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if(selectedRow >= 0){
+                int doctorID = (int) tableModel.getValueAt(selectedRow, 0);
+                try{
+                    Doctor doctor = doctorService.getDoctor(doctorID);
+                    goToEditDoctorPanel(doctor);
+                }catch(Exception ex){
+                    JOptionPane.showMessageDialog(this, "Error fetching doctor: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }else{
+                JOptionPane.showMessageDialog(this, "Please selecte a doctor to update", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         updateTable();
     }
 
@@ -158,6 +181,25 @@ public class DoctorPanel extends JPanel{
         }catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void goToEditDoctorPanel(Doctor doctor){
+        EditDoctorPanel editDoctorPanel = new EditDoctorPanel(doctorService);
+        editDoctorPanel.setDoctor(doctor);
+        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+        editDoctorPanel.addPropertyChangeListener("doctorUpdated", evt -> {
+            updateTable(); // Actualizar la tabla al cerrar el panel de edición
+            parentFrame.getContentPane().removeAll();
+            parentFrame.add(this); // Volver a añadir el DoctorPanel al contenedor principal
+            parentFrame.revalidate();
+            parentFrame.repaint();
+        });
+
+        parentFrame.getContentPane().removeAll();
+        parentFrame.add(editDoctorPanel);
+        parentFrame.revalidate();
+        parentFrame.repaint();
     }
 }
 

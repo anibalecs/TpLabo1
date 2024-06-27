@@ -1,85 +1,102 @@
 package graficInterface.panel;
 
+import app.model.ReportData;
+import app.service.ShiftService;
+import dataBase.DAO.ShiftDAO;
+import dataBase.DAO.ShiftDAOImpl;
+import dataBase.DataBaseConfig;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class ReportPanel extends JPanel {
+    private ShiftService shiftService;
+    private JTextField doctorIDField;
+    private JTextField startDateField;
+    private JTextField endDateField;
+    private DefaultTableModel tableModel;
+    private JTable table;
+    private JLabel totalQueriesLabel;
+    private JLabel totalAmountLabel;
+
     public ReportPanel() {
+        ShiftDAO shiftDAO = new ShiftDAOImpl(DataBaseConfig.connect());
+        this.shiftService = new ShiftService(shiftDAO);
+
         setLayout(new BorderLayout());
 
-        // Panel de selección de médico y fechas
-        JPanel selectionPanel = new JPanel(new GridLayout(4, 2));
-        selectionPanel.add(new JLabel("Doctor:"));
-        JComboBox<String> doctorComboBox = new JComboBox<>(new String[]{
-                "Doctor 1", "Doctor 2", "Doctor 3" // Aquí agregar los nombres de los médicos desde la base de datos
-        });
-        selectionPanel.add(doctorComboBox);
+        // Panel de entrada de datos
+        JPanel inputPanel = new JPanel(new GridLayout(4, 2));
+        inputPanel.add(new JLabel("Doctor ID:"));
+        doctorIDField = new JTextField();
+        inputPanel.add(doctorIDField);
 
-        selectionPanel.add(new JLabel("Start date:"));
-        JPanel startDatePanel = createDatePickerPanel();
-        selectionPanel.add(startDatePanel);
+        inputPanel.add(new JLabel("Start Date (yyyy-mm-dd):"));
+        startDateField = new JTextField();
+        inputPanel.add(startDateField);
 
-        selectionPanel.add(new JLabel("End date:"));
-        JPanel endDatePanel = createDatePickerPanel();
-        selectionPanel.add(endDatePanel);
+        inputPanel.add(new JLabel("End Date (yyyy-mm-dd):"));
+        endDateField = new JTextField();
+        inputPanel.add(endDateField);
 
-        JButton generateButton = new JButton("Search report");
-        selectionPanel.add(generateButton);
+        JButton generateReportButton = new JButton("Generate Report");
+        generateReportButton.addActionListener(e -> generateReport());
+        inputPanel.add(generateReportButton);
 
-        add(selectionPanel, BorderLayout.NORTH);
+        add(inputPanel, BorderLayout.NORTH);
 
         // Tabla de reportes
-        String[] columnNames = {"Date", "Amount charged", "Number of queries"};
-        Object[][] data = {
-                // Aquí se agregarían los datos del reporte
-        };
-        JTable reportTable = new JTable(data, columnNames);
-        JScrollPane scrollPane = new JScrollPane(reportTable);
+        String[] columnNames = {"Date", "Queries", "Amount Charged"};
+        tableModel = new DefaultTableModel(columnNames, 0);
+        table = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Listener para el botón de generar reporte
-        generateButton.addActionListener(e -> {
-            String selectedDoctor = (String) doctorComboBox.getSelectedItem();
-
-            String startDay = (String) ((JComboBox<?>) startDatePanel.getComponent(0)).getSelectedItem();
-            String startMonth = (String) ((JComboBox<?>) startDatePanel.getComponent(1)).getSelectedItem();
-            String startYear = (String) ((JComboBox<?>) startDatePanel.getComponent(2)).getSelectedItem();
-            String startDate = startYear + "-" + startMonth + "-" + startDay;
-
-            String endDay = (String) ((JComboBox<?>) endDatePanel.getComponent(0)).getSelectedItem();
-            String endMonth = (String) ((JComboBox<?>) endDatePanel.getComponent(1)).getSelectedItem();
-            String endYear = (String) ((JComboBox<?>) endDatePanel.getComponent(2)).getSelectedItem();
-            String endDate = endYear + "-" + endMonth + "-" + endDay;
-
-            // Aquí se agrega la lógica para obtener los datos del reporte desde la base de datos
-            // y actualizar la tabla
-        });
+        // Panel para totales
+        JPanel totalsPanel = new JPanel(new GridLayout(1, 2));
+        totalQueriesLabel = new JLabel("Total Queries: 0");
+        totalAmountLabel = new JLabel("Total Amount Charged: 0");
+        totalsPanel.add(totalQueriesLabel);
+        totalsPanel.add(totalAmountLabel);
+        add(totalsPanel, BorderLayout.SOUTH);
     }
 
-    private JPanel createDatePickerPanel() {
-        JPanel datePanel = new JPanel(new GridLayout(1, 3));
+    private void generateReport() {
+        try {
+            int doctorID = Integer.parseInt(doctorIDField.getText());
+            String startDateStr = startDateField.getText() + " 00:00:00";
+            String endDateStr = endDateField.getText() + " 23:59:59";
+            Timestamp startDate = Timestamp.valueOf(startDateStr);
+            Timestamp endDate = Timestamp.valueOf(endDateStr);
 
-        String[] days = new String[31];
-        for (int i = 0; i < 31; i++) {
-            days[i] = String.format("%02d", i + 1);
+            List<ReportData> reportDataList = shiftService.getReportDataForDoctor(doctorID, startDate, endDate);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            tableModel.setRowCount(0); // Limpiar la tabla antes de agregar nuevas filas
+
+            int totalQueries = 0;
+            double totalAmountCharged = 0.0;
+
+            for (ReportData data : reportDataList) {
+                Object[] row = {
+                        dateFormat.format(data.getDate()),
+                        data.getNumberOfQueries(),
+                        data.getAmountCharged()
+                };
+                tableModel.addRow(row);
+
+                totalQueries += data.getNumberOfQueries();
+                totalAmountCharged += data.getAmountCharged();
+            }
+
+            totalQueriesLabel.setText("Total Queries: " + totalQueries);
+            totalAmountLabel.setText("Total Amount Charged: " + totalAmountCharged);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error generating report: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        JComboBox<String> dayComboBox = new JComboBox<>(days);
-        datePanel.add(dayComboBox);
-
-        String[] months = new String[12];
-        for (int i = 0; i < 12; i++) {
-            months[i] = String.format("%02d", i + 1);
-        }
-        JComboBox<String> monthComboBox = new JComboBox<>(months);
-        datePanel.add(monthComboBox);
-
-        String[] years = new String[50];
-        for (int i = 0; i < 50; i++) {
-            years[i] = String.valueOf(2023 + i);
-        }
-        JComboBox<String> yearComboBox = new JComboBox<>(years);
-        datePanel.add(yearComboBox);
-
-        return datePanel;
     }
 }

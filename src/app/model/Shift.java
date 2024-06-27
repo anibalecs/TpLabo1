@@ -1,22 +1,55 @@
 package app.model;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 public class Shift {
-    private int id;
-    private Doctor doctor;
-    private Patient patient;
-    private LocalDateTime fechaHora;
+    private int shiftID;
+    private int doctorID;
+    private int patientID;
+    private Timestamp dateTime;
 
-    public Shift(int id, Doctor doctor, Patient patient, LocalDateTime fechaHora) {
-        this.id = id;
-        this.doctor = doctor;
-        this.patient = patient;
-        this.fechaHora = fechaHora;
+    public Shift(int shiftID, int doctorID, int patientID, Timestamp dateTime){
+        this.shiftID = shiftID;
+        this.doctorID = doctorID;
+        this.patientID = patientID;
+        this.dateTime = dateTime;
     }
 
-    public Shift() {
+    public Shift(int doctorID, int patientID, Timestamp dateTime){
+        this.doctorID = doctorID;
+        this.patientID = patientID;
+        this.dateTime = dateTime;
     }
 
+    public int getShiftID() {
+        return shiftID;
+    }
 
+    public int getDoctorID() {
+        return doctorID;
+    }
+
+    public int getPatientID() {
+        return patientID;
+    }
+
+    public Timestamp getDateTime() {
+        return dateTime;
+    }
+
+    public void setShiftID(int shiftID) {
+        this.shiftID = shiftID;
+    }
+
+    public void setDoctorID(int doctorID) {
+        this.doctorID = doctorID;
+    }
+
+    public void setPatientID(int patientID) {
+        this.patientID = patientID;
+    }
+
+    public void setDateTime(Timestamp dateTime) {
+        this.dateTime = dateTime;
+    }
 }

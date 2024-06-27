@@ -29,13 +29,13 @@ public class DoctorPanel extends JPanel{
         setLayout(new BorderLayout());
 
         // Tabla de médicos
-        String[] columnNames = {"Doctor id", "Last name", "Consultation cost"};
+        String[] columnNames = {"Doctor id", "Name", "Consultation cost"};
         tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane,BorderLayout.CENTER);
 
-        // Formulario para agregar médicos
+        // Formulario para agregar medicos
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5); // Espaciado entre componentes
@@ -164,7 +164,7 @@ public class DoctorPanel extends JPanel{
                     JOptionPane.showMessageDialog(this, "Error fetching doctor: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }else{
-                JOptionPane.showMessageDialog(this, "Please selecte a doctor to update", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please select a doctor to update", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -175,7 +175,7 @@ public class DoctorPanel extends JPanel{
         tableModel.setRowCount(0);
         try{
             for(Doctor doctor : doctorService.getDoctors()){
-                Object[] row = {doctor.getDoctorID(), doctor.getLastName(), doctor.getConsultationCost()};
+                Object[] row = {doctor.getDoctorID(), doctor.getName() + " " + doctor.getLastName(), doctor.getConsultationCost()};
                 tableModel.addRow(row);
             }
         }catch(Exception e){
@@ -189,9 +189,9 @@ public class DoctorPanel extends JPanel{
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
         editDoctorPanel.addPropertyChangeListener("doctorUpdated", evt -> {
-            updateTable(); // Actualizar la tabla al cerrar el panel de edición
+            updateTable(); //Actualizar la tabla depues de cerrar el panel de edicion
             parentFrame.getContentPane().removeAll();
-            parentFrame.add(this); // Volver a añadir el DoctorPanel al contenedor principal
+            parentFrame.add(this);
             parentFrame.revalidate();
             parentFrame.repaint();
         });

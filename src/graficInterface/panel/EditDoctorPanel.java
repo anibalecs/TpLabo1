@@ -2,7 +2,6 @@ package graficInterface.panel;
 
 import app.model.Doctor;
 import app.service.DoctorService;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -74,7 +73,7 @@ public class EditDoctorPanel extends JPanel {
 
         add(formPanel, BorderLayout.CENTER);
 
-        // Listener del Botón de Guardar
+        //Listener del boton de guardar
         saveButton.addActionListener(e -> saveChanges());
     }
 
@@ -93,14 +92,14 @@ public class EditDoctorPanel extends JPanel {
         String lastName = lastNameField.getText();
         String email = emailField.getText();
         double consultationCost = Double.parseDouble(consultationCostField.getText());
-        int dni = Integer.parseInt(dniField.getText());
+        int DNI = Integer.parseInt(dniField.getText());
         String birthDate = birthDateField.getText();
 
         currentDoctor.setName(name);
         currentDoctor.setLastName(lastName);
         currentDoctor.setEmail(email);
         currentDoctor.setConsultationCost(consultationCost);
-        currentDoctor.setDNI(dni);
+        currentDoctor.setDNI(DNI);
         currentDoctor.setBirthDate(java.sql.Date.valueOf(birthDate));
 
         try {

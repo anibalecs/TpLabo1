@@ -44,17 +44,20 @@ public class DoctorDAOImpl implements DoctorDAO{
 
     @Override
     public Doctor getDoctor(int doctorID) {
-        try{
-            User user = userService.getUser(doctorID);
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT consultationCost FROM Doctors WHERE doctorID = ?");
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT userID, consultationCost FROM Doctors WHERE doctorID = ?");
             preparedStatement.setInt(1, doctorID);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
+            if (resultSet.next()) {
+                int userID = resultSet.getInt("userID");
                 double consultationCost = resultSet.getDouble("consultationCost");
-                return new Doctor(user.getUserID(), user.getName(), user.getLastName(), user.getEmail(), user.getDNI(), user.getBirthDate(), doctorID, consultationCost);
+                User user = userService.getUser(userID);
+                if (user != null) {
+                    return new Doctor(user.getUserID(), user.getName(), user.getLastName(), user.getEmail(), user.getDNI(), user.getBirthDate(), doctorID, consultationCost);
+                }
             }
-        }catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -62,7 +65,7 @@ public class DoctorDAOImpl implements DoctorDAO{
     @Override
     public void updateDoctor(Doctor doctor, int doctorid) {
         try{
-            userService.updateUser(doctor, doctorid);
+            userService.updateUser(doctor, doctor.getUserID());
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Doctors SET consultationCost = ? WHERE doctorID = ?");
             preparedStatement.setDouble(1, doctor.getConsultationCost());
             preparedStatement.setInt(2, doctorid);
@@ -73,15 +76,16 @@ public class DoctorDAOImpl implements DoctorDAO{
     }
 
     @Override
-    public List<Doctor> getDoctors() {
+    public List<Doctor> getDoctors(){
         List<Doctor> doctors = new ArrayList<>();
         try{
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Doctors");
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
                 int doctorID = resultSet.getInt("doctorID");
-                double consultationCost =resultSet.getDouble("consultationCost");
-                User user = userService.getUser(doctorID);
+                double consultationCost = resultSet.getDouble("consultationCost");
+                int userID = resultSet.getInt("userID");
+                User user = userService.getUser(userID);
                 if(user != null){
                     doctors.add(new Doctor(user.getUserID(), user.getName(), user.getLastName(), user.getEmail(), user.getDNI(), user.getBirthDate(), doctorID, consultationCost));
                 }

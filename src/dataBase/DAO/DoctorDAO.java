@@ -1,7 +1,6 @@
     package dataBase.DAO;
 
     import app.model.Doctor;
-
     import java.util.List;
 
     public interface DoctorDAO {

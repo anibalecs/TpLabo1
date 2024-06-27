@@ -1,36 +1,73 @@
 package graficInterface.panel;
 
+import app.model.Doctor;
+import app.model.Shift;
+import app.service.DoctorService;
+import app.service.ShiftService;
+import app.service.UserService;
+import dataBase.DAO.*;
+import dataBase.DataBaseConfig;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.List;
 
-public class PatientViewPanel extends JPanel {
-    public PatientViewPanel() {
+public class PatientViewPanel extends JPanel{
+    private JTable table;
+    private DefaultTableModel tableModel;
+    private JTextField patientIDField;
+    private ShiftService shiftService;
+    private DoctorService doctorService;
+
+    public PatientViewPanel(){
+        ShiftDAO shiftDAO = new ShiftDAOImpl(DataBaseConfig.connect());
+        UserDAO userDAO = new UserDAOImpl(DataBaseConfig.connect());
+        UserService userService = new UserService(userDAO);
+        DoctorDAO doctorDAO = new DoctorDAOImpl(DataBaseConfig.connect(), userService);
+        this.shiftService = new ShiftService(shiftDAO);
+        this.doctorService = new DoctorService(doctorDAO);
+
         setLayout(new BorderLayout());
 
-        // Tabla de turnos del paciente
+        // Tabla de turnos
         String[] columnNames = {"Date", "Hour", "Doctor"};
-        Object[][] data = {
-                // Aquí egregar los datos de los turnos del paciente
-        };
-        JTable table = new JTable(data, columnNames);
+        tableModel = new DefaultTableModel(columnNames, 0);
+        table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Formulario seleccionar el paciente
-        JPanel formPanel = new JPanel(new GridLayout(2, 1));
+        //seleccionar el paciente
+        JPanel formPanel = new JPanel(new GridLayout(3, 1));
         formPanel.add(new JLabel("Patient id:"));
-        JTextField patientIdField = new JTextField();
-        formPanel.add(patientIdField);
+        patientIDField = new JTextField();
+        formPanel.add(patientIDField);
 
         JButton viewButton = new JButton("See shifts");
         formPanel.add(viewButton);
 
         add(formPanel, BorderLayout.NORTH);
 
-        // Listener para el botón de ver turnos
         viewButton.addActionListener(e -> {
-            // Aquí agregar paraobtener los turnos del paciente de la base de datos
-            // y actualizar la tabla
+            int patientId = Integer.parseInt(patientIDField.getText());
+            try {
+                updateTableWithPatientShifts(patientId);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
         });
+    }
+
+    private void updateTableWithPatientShifts(int patientId) throws Exception{
+        List<Shift> shifts = shiftService.getShiftsByPatientID(patientId);
+        tableModel.setRowCount(0); //Para limpiar la tabla antes de actualizar
+        for(Shift shift : shifts){
+            Doctor doctor = doctorService.getDoctor(shift.getDoctorID());
+            System.out.println(shift.getDoctorID());
+            Object[] row = {
+                    shift.getDateTime().toLocalDateTime().toLocalDate(),
+                    shift.getDateTime().toLocalDateTime().toLocalTime(),
+                    doctor != null ? doctor.getName() + " " + doctor.getLastName() : "Unknow"};
+            tableModel.addRow(row);
+        }
     }
 }

@@ -4,7 +4,7 @@ import app.model.Doctor;
 import dataBase.DAO.DoctorDAO;
 import java.util.List;
 
-public class DoctorService {
+public class DoctorService{
     private DoctorDAO doctorDAO;
 
     public DoctorService(DoctorDAO doctorDAO){
@@ -35,7 +35,7 @@ public class DoctorService {
         }
     }
 
-    public void updateDoctor(Doctor doctor, int id) throws Exception {
+    public void updateDoctor(Doctor doctor, int id) throws Exception{
         try{
             doctorDAO.updateDoctor(doctor, id);
         }catch(Exception e){
@@ -43,7 +43,7 @@ public class DoctorService {
         }
     }
 
-    public List<Doctor> getDoctors() throws Exception {
+    public List<Doctor> getDoctors() throws Exception{
         try{
             return doctorDAO.getDoctors();
         }catch(Exception e){

@@ -17,9 +17,6 @@ public class Doctor extends User{
         this.consultationCost = consultationCost;
     }
 
-    public Doctor() {
-    }
-
     public int getDoctorID() {
         return doctorID;
     }

@@ -3,15 +3,17 @@ package graficInterface.panel;
 import javax.swing.*;
 import java.awt.*;
 
-public class DoctorMainPanel extends JPanel {
-    public DoctorMainPanel(CardLayout cardLayout, JPanel mainPanel) {
+public class DoctorMainPanel extends JPanel{
+    private CardLayout cardLayout;
+    private JPanel doctorPanel;
 
+    public DoctorMainPanel(CardLayout cardLayout, JPanel mainPanel){
+        this.cardLayout = cardLayout;
         setLayout(new BorderLayout());
 
-        // Paneles
-        JPanel doctorPanel = new JPanel(new CardLayout());
+        doctorPanel = new JPanel(new CardLayout());
 
-        // Agrega diferentes paneles
+        // Agrega paneles
         doctorPanel.add(new DoctorPanel(), "Doctors");
         doctorPanel.add(new PatientPanel(), "Patients");
         doctorPanel.add(new ShiftPanel(), "Shifts");
@@ -45,3 +47,4 @@ public class DoctorMainPanel extends JPanel {
         menuItemReport.addActionListener(e -> doctorCardLayout.show(doctorPanel, "Reports"));
     }
 }
+

@@ -11,7 +11,7 @@ public class EditPatientPanel extends JPanel {
     private JButton saveButton;
     private Patient currentPatient;
 
-    public EditPatientPanel(PatientService patientService) {
+    public EditPatientPanel(PatientService patientService){
         this.patientService = patientService;
         setLayout(new BorderLayout());
 
@@ -20,7 +20,7 @@ public class EditPatientPanel extends JPanel {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Labels y Campos de Texto
+        //Data
         gbc.gridx = 0;
         gbc.gridy = 0;
         formPanel.add(new JLabel("Name:"), gbc);
@@ -77,7 +77,7 @@ public class EditPatientPanel extends JPanel {
         allergiesField = new JTextField(20);
         formPanel.add(allergiesField, gbc);
 
-        // Botón Guardar
+        // Boton
         gbc.gridx = 0;
         gbc.gridy = 8;
         gbc.gridwidth = 2;
@@ -87,7 +87,6 @@ public class EditPatientPanel extends JPanel {
 
         add(formPanel, BorderLayout.CENTER);
 
-        //Listener para el boton guardar
         saveButton.addActionListener(e -> saveChanges());
     }
 
@@ -103,8 +102,8 @@ public class EditPatientPanel extends JPanel {
         allergiesField.setText(patient.getAllergies());
     }
 
-    private void saveChanges() {
-        if (currentPatient != null) {
+    private void saveChanges(){
+        if(currentPatient != null){
             String name = nameField.getText();
             String lastName = lastNameField.getText();
             String email = emailField.getText();
@@ -123,14 +122,14 @@ public class EditPatientPanel extends JPanel {
             currentPatient.setAlternativeNumber(alternativeNumber);
             currentPatient.setAllergies(allergies);
 
-            try {
+            try{
                 patientService.updatePatient(currentPatient, currentPatient.getPatientID());
                 JOptionPane.showMessageDialog(this, "Patient updated successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
                 firePropertyChange("patientUpdated", null, currentPatient);
-            } catch (Exception ex) {
+            }catch(Exception ex){
                 JOptionPane.showMessageDialog(this, "Error updating patient: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
+        }else{
             System.err.println("currentPatient is null. Cannot save changes.");
         }
     }

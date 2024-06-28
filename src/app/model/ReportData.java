@@ -13,30 +13,27 @@ public class ReportData{
         this.numberOfQueries = numberOfQueries;
     }
 
-    public ReportData() {
-    }
-
-    public Timestamp getDate() {
+    public Timestamp getDate(){
         return date;
     }
 
-    public double getAmountCharged() {
+    public double getAmountCharged(){
         return amountCharged;
     }
 
-    public int getNumberOfQueries() {
+    public int getNumberOfQueries(){
         return numberOfQueries;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(Timestamp date){
         this.date = date;
     }
 
-    public void setAmountCharged(double amountCharged) {
+    public void setAmountCharged(double amountCharged){
         this.amountCharged = amountCharged;
     }
 
-    public void setNumberOfQueries(int numberOfQueries) {
+    public void setNumberOfQueries(int numberOfQueries){
         this.numberOfQueries = numberOfQueries;
     }
 }

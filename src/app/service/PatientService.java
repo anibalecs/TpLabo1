@@ -1,19 +1,17 @@
 package app.service;
 
-import app.model.Doctor;
 import app.model.Patient;
 import dataBase.DAO.PatientDAO;
-
 import java.util.List;
 
 public class PatientService{
     private PatientDAO patientDAO;
 
-    public PatientService(PatientDAO patientDAO) {
+    public PatientService(PatientDAO patientDAO){
         this.patientDAO = patientDAO;
     }
 
-    public void createPatient(Patient patient) throws Exception {
+    public void createPatient(Patient patient) throws Exception{
         try{
             patientDAO.createPatient(patient);
         }catch(Exception e){
@@ -29,7 +27,7 @@ public class PatientService{
         }
     }
 
-    public Patient getPatient(int id) throws Exception {
+    public Patient getPatient(int id) throws Exception{
         try{
             return patientDAO.getPatient(id);
         }catch(Exception e){
@@ -37,7 +35,7 @@ public class PatientService{
         }
     }
 
-    public void updatePatient(Patient patient, int id) throws Exception {
+    public void updatePatient(Patient patient, int id) throws Exception{
         try{
             patientDAO.updatePatient(patient, id);
         }catch(Exception e){
@@ -45,7 +43,7 @@ public class PatientService{
         }
     }
 
-    public List<Patient> getPatients() throws Exception {
+    public List<Patient> getPatients() throws Exception{
         try{
             return patientDAO.getPatients();
         }catch(Exception e){

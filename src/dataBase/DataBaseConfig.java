@@ -2,7 +2,7 @@ package dataBase;
 
 import java.sql.*;
 
-public class DataBaseConfig {
+public class DataBaseConfig{
     private static String Username = "sa";
     private static String Password = "";
     private static String Url = "jdbc:h2:file:C:/Users/aniba/test;IFEXISTS=FALSE";

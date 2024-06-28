@@ -2,7 +2,7 @@ package app.model;
 
 import java.sql.Date;
 
-public class User {
+public class User{
     private int UserID;
     private String name;
     private String lastName;
@@ -10,7 +10,7 @@ public class User {
     private int DNI;
     private Date birthDate;
 
-    public User(int userID, String name, String lastName, String email, int DNI, Date birthDate) {
+    public User(int userID, String name, String lastName, String email, int DNI, Date birthDate){
         this.UserID = userID;
         this.name = name;
         this.lastName = lastName;
@@ -19,7 +19,7 @@ public class User {
         this.email = email;
     }
 
-    public User(String name, String lastName, String email, int DNI, Date birthDate) {
+    public User(String name, String lastName, String email, int DNI, Date birthDate){
         this.name = name;
         this.lastName = lastName;
         this.email = email;
@@ -27,51 +27,51 @@ public class User {
         this.birthDate = birthDate;
     }
 
-    public int getUserID() {
+    public int getUserID(){
         return UserID;
     }
 
-    public String getName() {
+    public String getName(){
         return name;
     }
 
-    public String getLastName() {
+    public String getLastName(){
         return lastName;
     }
 
-    public String getEmail() {
+    public String getEmail(){
         return email;
     }
 
-    public int getDNI() {
+    public int getDNI(){
         return DNI;
     }
 
-    public Date getBirthDate() {
+    public Date getBirthDate(){
         return birthDate;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(int userID){
         UserID = userID;
     }
 
-    public void setName(String name) {
+    public void setName(String name){
         this.name = name;
     }
 
-    public void setLastName(String lastName) {
+    public void setLastName(String lastName){
         this.lastName = lastName;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(String email){
         this.email = email;
     }
 
-    public void setDNI(int DNI) {
+    public void setDNI(int DNI){
         this.DNI = DNI;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(Date birthDate){
         this.birthDate = birthDate;
     }
 }

@@ -24,14 +24,12 @@ public class PatientPanel extends JPanel{
 
         setLayout(new BorderLayout());
 
-        // Tabla de pacientes
         String[] columnNames = {"Patient id", "Name", "Birth date", "Phone number"};
         tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane,BorderLayout.CENTER);
 
-        // Formulario para agregar pacientes
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5); // Espaciado entre componentes
@@ -95,7 +93,7 @@ public class PatientPanel extends JPanel{
         JTextField allergiesField = new JTextField(20);
         formPanel.add(allergiesField, gbc);
 
-        // Boton de agregar medico
+        // Botones
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.gridwidth = 4;
@@ -103,7 +101,6 @@ public class PatientPanel extends JPanel{
         JButton addButton = new JButton("Add patient");
         formPanel.add(addButton, gbc);
 
-        //Boton de eliminar medico
         gbc.gridx = 0;
         gbc.gridy = 5;
         gbc.gridwidth = 4;
@@ -111,7 +108,6 @@ public class PatientPanel extends JPanel{
         JButton deleteButton = new JButton("Delete patient");
         formPanel.add(deleteButton, gbc);
 
-        // Boton de actualizar medico
         gbc.gridx = 0;
         gbc.gridy = 6;
         gbc.gridwidth = 4;
@@ -136,21 +132,21 @@ public class PatientPanel extends JPanel{
                 java.util.Date utilDate = sdf.parse(birthDateText);
                 java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
                 birthDate = sqlDate;
-            }catch (ParseException ex) {
+            }catch(ParseException ex){
                 JOptionPane.showMessageDialog(this, "Invalid date format. Please use yyyy-MM-dd", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             Patient newPatient = new Patient(name, lastName, email, DNI, (java.sql.Date) birthDate, phoneNumber, alternativeNumber, allergies);
-            try {
+            try{
                 patientService.createPatient(newPatient);
                 updateTable();
                 JOptionPane.showMessageDialog(this, "Patient created successfully", "Sucess", JOptionPane.INFORMATION_MESSAGE);
-            } catch (Exception ex) {
+            }catch(Exception ex){
                 JOptionPane.showMessageDialog(this, "Error creating patient: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        deleteButton.addActionListener(e -> {
+        deleteButton.addActionListener(e->{
             int selectedRow = table.getSelectedRow();
             if(selectedRow >= 0){
                 int patientID = (int) tableModel.getValueAt(selectedRow, 0);
@@ -165,7 +161,7 @@ public class PatientPanel extends JPanel{
             }
         });
 
-        updateButton.addActionListener(e -> {
+        updateButton.addActionListener(e->{
             int selectedRow = table.getSelectedRow();
             if(selectedRow >= 0){
                 int patientID = (int) tableModel.getValueAt(selectedRow, 0);
@@ -179,7 +175,6 @@ public class PatientPanel extends JPanel{
                 JOptionPane.showMessageDialog(this, "Please select a patient to update", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-
         updateTable();
     }
 
@@ -200,7 +195,7 @@ public class PatientPanel extends JPanel{
         editPatientPanel.setPatient(patient);
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-        editPatientPanel.addPropertyChangeListener("patientUpdated", evt -> {
+        editPatientPanel.addPropertyChangeListener("patientUpdated", evt->{
             updateTable(); //Actualizar la tabla depues de cerrar el panel de edicion
             parentFrame.getContentPane().removeAll();
             parentFrame.add(this);

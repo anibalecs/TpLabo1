@@ -11,7 +11,7 @@ public class DoctorService{
         this.doctorDAO = doctorDAO;
     }
 
-    public void createDoctor(Doctor doctor) throws Exception {
+    public void createDoctor(Doctor doctor) throws Exception{
         try{
             doctorDAO.createDoctor(doctor);
         }catch(Exception e){
@@ -19,7 +19,7 @@ public class DoctorService{
         }
     }
 
-    public void deleteDoctor(int id) throws Exception {
+    public void deleteDoctor(int id) throws Exception{
         try{
             doctorDAO.deleteDoctor(id);
         }catch(Exception e){
@@ -27,7 +27,7 @@ public class DoctorService{
         }
     }
 
-    public Doctor getDoctor(int id) throws Exception {
+    public Doctor getDoctor(int id) throws Exception{
         try{
             return doctorDAO.getDoctor(id);
         }catch(Exception e){

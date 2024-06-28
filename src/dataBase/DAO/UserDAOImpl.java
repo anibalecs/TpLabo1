@@ -5,15 +5,15 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDAOImpl implements UserDAO {
+public class UserDAOImpl implements UserDAO{
     private Connection connection;
 
-    public UserDAOImpl(Connection connection) {
+    public UserDAOImpl(Connection connection){
         this.connection = connection;
     }
 
     @Override
-    public void createUser(User user) {
+    public void createUser(User user){
         try{
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Users (name, lastname, email, DNI, birthDate) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getName());
@@ -24,18 +24,18 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.executeUpdate();
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
+            if(generatedKeys.next()){
                 user.setUserID(generatedKeys.getInt(1));
-            } else {
+            }else{
                 throw new SQLException("No ID obtained.");
             }
         }catch(SQLException e){
-                e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
     @Override
-    public User getUser(int id) {
+    public User getUser(int id){
         try{
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE UserID = ?");
             preparedStatement.setInt(1, id);
@@ -56,7 +56,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void deleteUser(int UserID) {
+    public void deleteUser(int UserID){
         try{
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Users WHERE UserID = ?");
             preparedStatement.setInt(1, UserID);
@@ -67,7 +67,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void updateUser(User user, int id) {
+    public void updateUser(User user, int id){
         try{
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Users SET name = ? , lastName = ? , email = ? , DNI = ? , birthDate = ? WHERE UserID = ?");
             preparedStatement.setString(1, user.getName());
@@ -83,7 +83,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<User> getUsers(){
         List<User> users = new ArrayList<>();
         try{
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users");

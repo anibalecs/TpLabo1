@@ -1,10 +1,9 @@
 package dataBase.DAO;
 
 import app.model.User;
-
 import java.util.List;
 
-public interface UserDAO {
+public interface UserDAO{
     void createUser(User user);
     User getUser(int id);
     void deleteUser(int id);

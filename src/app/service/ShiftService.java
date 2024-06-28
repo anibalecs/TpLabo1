@@ -9,11 +9,11 @@ import java.util.List;
 public class ShiftService{
     private ShiftDAO shiftDAO;
 
-    public ShiftService(ShiftDAO shiftDAO) {
+    public ShiftService(ShiftDAO shiftDAO){
         this.shiftDAO = shiftDAO;
     }
 
-    public void createShift(Shift shift) throws Exception {
+    public void createShift(Shift shift) throws Exception{
         try {
             if(shiftDAO.isDoctorAvailable(shift.getDoctorID(), shift.getDateTime())){
                 shiftDAO.createShift(shift);
@@ -25,7 +25,7 @@ public class ShiftService{
         }
     }
 
-    public void deleteShift(int id) throws Exception {
+    public void deleteShift(int id) throws Exception{
         try{
             shiftDAO.deleteShift(id);
         }catch(Exception e){
@@ -33,7 +33,7 @@ public class ShiftService{
         }
     }
 
-    public Shift getShift(int id) throws Exception {
+    public Shift getShift(int id) throws Exception{
         try{
             return shiftDAO.getShift(id);
         }catch(Exception e){
@@ -41,7 +41,7 @@ public class ShiftService{
         }
     }
 
-    public void updateShift(Shift shift, int id) throws Exception {
+    public void updateShift(Shift shift, int id) throws Exception{
         try{
             shiftDAO.updateShift(shift, id);
         }catch(Exception e){
@@ -49,7 +49,7 @@ public class ShiftService{
         }
     }
 
-    public List<Shift> getShifts() throws Exception {
+    public List<Shift> getShifts() throws Exception{
         try{
             return shiftDAO.getShifts();
         }catch(Exception e){
@@ -57,7 +57,7 @@ public class ShiftService{
         }
     }
 
-    public boolean isDoctorAvailable(int doctorID, Timestamp dateTime) throws Exception {
+    public boolean isDoctorAvailable(int doctorID, Timestamp dateTime) throws Exception{
         try {
             return shiftDAO.isDoctorAvailable(doctorID, dateTime);
         }catch(Exception e){
@@ -65,7 +65,7 @@ public class ShiftService{
         }
     }
 
-    public List<Shift> getShiftsByPatientID(int patientID) throws Exception {
+    public List<Shift> getShiftsByPatientID(int patientID) throws Exception{
         try {
             return shiftDAO.getShiftsByPatientID(patientID);
         } catch (Exception e) {
@@ -73,7 +73,7 @@ public class ShiftService{
         }
     }
 
-    public List<ReportData> getReportDataForDoctor(int doctorID, Timestamp startDate, Timestamp endDate) throws Exception {
+    public List<ReportData> getReportDataForDoctor(int doctorID, Timestamp startDate, Timestamp endDate) throws Exception{
         try {
             return shiftDAO.getReportDataForDoctor(doctorID, startDate, endDate);
         } catch (Exception e) {

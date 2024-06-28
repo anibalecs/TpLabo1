@@ -29,7 +29,6 @@ public class PatientViewPanel extends JPanel{
 
         setLayout(new BorderLayout());
 
-        // Tabla de turnos
         String[] columnNames = {"Date", "Hour", "Doctor"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);

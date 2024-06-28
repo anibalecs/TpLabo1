@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class ReportPanel extends JPanel {
+public class ReportPanel extends JPanel{
     private ShiftService shiftService;
     private JTextField doctorIDField;
     private JTextField startDateField;
@@ -22,13 +22,12 @@ public class ReportPanel extends JPanel {
     private JLabel totalQueriesLabel;
     private JLabel totalAmountLabel;
 
-    public ReportPanel() {
+    public ReportPanel(){
         ShiftDAO shiftDAO = new ShiftDAOImpl(DataBaseConfig.connect());
         this.shiftService = new ShiftService(shiftDAO);
 
         setLayout(new BorderLayout());
 
-        // Panel de entrada de datos
         JPanel inputPanel = new JPanel(new GridLayout(4, 2));
         inputPanel.add(new JLabel("Doctor ID:"));
         doctorIDField = new JTextField();
@@ -48,14 +47,12 @@ public class ReportPanel extends JPanel {
 
         add(inputPanel, BorderLayout.NORTH);
 
-        // Tabla de reportes
         String[] columnNames = {"Date", "Queries", "Amount Charged"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Panel para totales
         JPanel totalsPanel = new JPanel(new GridLayout(1, 2));
         totalQueriesLabel = new JLabel("Total Queries: 0");
         totalAmountLabel = new JLabel("Total Amount Charged: 0");
@@ -64,8 +61,8 @@ public class ReportPanel extends JPanel {
         add(totalsPanel, BorderLayout.SOUTH);
     }
 
-    private void generateReport() {
-        try {
+    private void generateReport(){
+        try{
             int doctorID = Integer.parseInt(doctorIDField.getText());
             String startDateStr = startDateField.getText() + " 00:00:00";
             String endDateStr = endDateField.getText() + " 23:59:59";
@@ -75,13 +72,13 @@ public class ReportPanel extends JPanel {
             List<ReportData> reportDataList = shiftService.getReportDataForDoctor(doctorID, startDate, endDate);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            tableModel.setRowCount(0); // Limpiar la tabla antes de agregar nuevas filas
+            tableModel.setRowCount(0); //para limpiar la tabla antes de agregar una nueva
 
             int totalQueries = 0;
             double totalAmountCharged = 0.0;
 
-            for (ReportData data : reportDataList) {
-                Object[] row = {
+            for(ReportData data : reportDataList){
+                Object[] row ={
                         dateFormat.format(data.getDate()),
                         data.getNumberOfQueries(),
                         data.getAmountCharged()
@@ -95,7 +92,7 @@ public class ReportPanel extends JPanel {
             totalQueriesLabel.setText("Total Queries: " + totalQueries);
             totalAmountLabel.setText("Total Amount Charged: " + totalAmountCharged);
 
-        } catch (Exception e) {
+        }catch(Exception e){
             JOptionPane.showMessageDialog(this, "Error generating report: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

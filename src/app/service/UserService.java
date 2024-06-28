@@ -4,14 +4,14 @@ import dataBase.DAO.UserDAO;
 import app.model.User;
 import java.util.List;
 
-public class UserService {
+public class UserService{
     private UserDAO userDAO;
 
     public UserService(UserDAO userDAO){
         this.userDAO = userDAO;
     }
 
-    public void createUser(User user) throws Exception {
+    public void createUser(User user) throws Exception{
         try{
             userDAO.createUser(user);
         }catch(Exception e){
@@ -19,7 +19,7 @@ public class UserService {
         }
     }
 
-    public void deleteUser(int id) throws Exception {
+    public void deleteUser(int id) throws Exception{
         try{
             userDAO.deleteUser(id);
         }catch(Exception e){
@@ -27,7 +27,7 @@ public class UserService {
         }
     }
 
-    public User getUser(int id) throws Exception {
+    public User getUser(int id) throws Exception{
         try{
             return userDAO.getUser(id);
         }catch(Exception e){
@@ -35,7 +35,7 @@ public class UserService {
         }
     }
 
-    public void updateUser(User user, int id) throws Exception {
+    public void updateUser(User user, int id) throws Exception{
         try{
             userDAO.updateUser(user, id);
         }catch(Exception e){
@@ -43,7 +43,7 @@ public class UserService {
         }
     }
 
-    public List<User> getUsers() throws Exception {
+    public List<User> getUsers() throws Exception{
         try{
             return userDAO.getUsers();
         }catch(Exception e){

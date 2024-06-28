@@ -5,14 +5,16 @@ import app.service.DoctorService;
 import javax.swing.*;
 import java.awt.*;
 
-public class EditDoctorPanel extends JPanel {
+public class EditDoctorPanel extends JPanel{
     private DoctorService doctorService;
     private JTextField nameField, lastNameField, emailField, consultationCostField, dniField, birthDateField;
     private JButton saveButton;
     private Doctor currentDoctor;
+    private JFrame parentFrame;
 
-    public EditDoctorPanel(DoctorService doctorService) {
+    public EditDoctorPanel(DoctorService doctorService, JFrame parentFrame){
         this.doctorService = doctorService;
+        this.parentFrame = parentFrame;
         setLayout(new BorderLayout());
 
         JPanel formPanel = new JPanel(new GridBagLayout());
@@ -20,7 +22,7 @@ public class EditDoctorPanel extends JPanel {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Labels y Campos de Texto
+        //Data
         gbc.gridx = 0;
         gbc.gridy = 0;
         formPanel.add(new JLabel("Name:"), gbc);
@@ -63,7 +65,7 @@ public class EditDoctorPanel extends JPanel {
         birthDateField = new JTextField(20);
         formPanel.add(birthDateField, gbc);
 
-        // Botón de Guardar
+        // Boton
         gbc.gridx = 0;
         gbc.gridy = 6;
         gbc.gridwidth = 2;
@@ -73,11 +75,10 @@ public class EditDoctorPanel extends JPanel {
 
         add(formPanel, BorderLayout.CENTER);
 
-        //Listener del boton de guardar
         saveButton.addActionListener(e -> saveChanges());
     }
 
-    public void setDoctor(Doctor doctor) {
+    public void setDoctor(Doctor doctor){
         this.currentDoctor = doctor;
         nameField.setText(doctor.getName());
         lastNameField.setText(doctor.getLastName());
@@ -87,7 +88,7 @@ public class EditDoctorPanel extends JPanel {
         birthDateField.setText(doctor.getBirthDate().toString());
     }
 
-    private void saveChanges() {
+    private void saveChanges(){
         String name = nameField.getText();
         String lastName = lastNameField.getText();
         String email = emailField.getText();
@@ -102,11 +103,19 @@ public class EditDoctorPanel extends JPanel {
         currentDoctor.setDNI(DNI);
         currentDoctor.setBirthDate(java.sql.Date.valueOf(birthDate));
 
-        try {
+        try{
             doctorService.updateDoctor(currentDoctor, currentDoctor.getDoctorID());
             JOptionPane.showMessageDialog(this, "Doctor updated successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             firePropertyChange("doctorUpdated", null, currentDoctor);
-        } catch (Exception ex) {
+
+            //volver al doctor panel
+            parentFrame.getContentPane().removeAll();
+            DoctorPanel doctorPanel = new DoctorPanel();
+            parentFrame.add(doctorPanel);
+            parentFrame.revalidate();
+            parentFrame.repaint();
+
+        }catch(Exception ex){
             JOptionPane.showMessageDialog(this, "Error updating doctor: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

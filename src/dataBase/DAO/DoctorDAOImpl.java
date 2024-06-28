@@ -3,7 +3,6 @@ package dataBase.DAO;
 import app.model.Doctor;
 import app.model.User;
 import app.service.UserService;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ public class DoctorDAOImpl implements DoctorDAO{
     private Connection connection;
     private UserService userService;
 
-    public DoctorDAOImpl(Connection connection, UserService userService) {
+    public DoctorDAOImpl(Connection connection, UserService userService){
         this.connection = connection;
         this.userService = userService;
     }
@@ -25,13 +24,13 @@ public class DoctorDAOImpl implements DoctorDAO{
             preparedStatement.setInt(1, doctor.getUserID());
             preparedStatement.setDouble(2, doctor.getConsultationCost());
             preparedStatement.executeUpdate();
-        }catch (Exception e) {
+        }catch (Exception e){
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void deleteDoctor(int doctorID) {
+    public void deleteDoctor(int doctorID){
         try{
             userService.deleteUser(doctorID);
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Doctors WHERE doctorID = ?");
@@ -43,7 +42,7 @@ public class DoctorDAOImpl implements DoctorDAO{
     }
 
     @Override
-    public Doctor getDoctor(int doctorID) {
+    public Doctor getDoctor(int doctorID){
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT userID, consultationCost FROM Doctors WHERE doctorID = ?");
             preparedStatement.setInt(1, doctorID);
@@ -56,21 +55,21 @@ public class DoctorDAOImpl implements DoctorDAO{
                     return new Doctor(user.getUserID(), user.getName(), user.getLastName(), user.getEmail(), user.getDNI(), user.getBirthDate(), doctorID, consultationCost);
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public void updateDoctor(Doctor doctor, int doctorid) {
+    public void updateDoctor(Doctor doctor, int doctorid){
         try{
             userService.updateUser(doctor, doctor.getUserID());
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Doctors SET consultationCost = ? WHERE doctorID = ?");
             preparedStatement.setDouble(1, doctor.getConsultationCost());
             preparedStatement.setInt(2, doctorid);
             preparedStatement.executeUpdate();
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
         }
     }

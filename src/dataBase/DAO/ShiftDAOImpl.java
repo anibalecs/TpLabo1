@@ -10,22 +10,22 @@ import java.util.List;
 public class ShiftDAOImpl implements ShiftDAO{
     private Connection connection;
 
-    public ShiftDAOImpl(Connection connection) {
+    public ShiftDAOImpl(Connection connection){
         this.connection = connection;
     }
 
     @Override
-    public void createShift(Shift shift) {
-        try {
+    public void createShift(Shift shift){
+        try{
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Shifts (doctorID, patientID, dateTime) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, shift.getDoctorID());
             preparedStatement.setInt(2, shift.getPatientID());
             preparedStatement.setTimestamp(3, shift.getDateTime());
             preparedStatement.executeUpdate();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
+            if (generatedKeys.next()){
                 shift.setShiftID(generatedKeys.getInt(1));
-            } else {
+            } else{
                 throw new SQLException("No ID obtained.");
             }
         }catch(Exception e){
@@ -34,7 +34,7 @@ public class ShiftDAOImpl implements ShiftDAO{
     }
 
     @Override
-    public void deleteShift(int shiftID) {
+    public void deleteShift(int shiftID){
         try{
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Shifts WHERE shiftID = ?");
             preparedStatement.setInt(1, shiftID);
@@ -45,7 +45,7 @@ public class ShiftDAOImpl implements ShiftDAO{
     }
 
     @Override
-    public Shift getShift(int id) {
+    public Shift getShift(int id){
         try{
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Shifts WHERE shiftsID = ?");
             preparedStatement.setInt(1, id);
@@ -63,7 +63,7 @@ public class ShiftDAOImpl implements ShiftDAO{
     }
 
     @Override
-    public void updateShift(Shift shift, int id) {
+    public void updateShift(Shift shift, int id){
         try{
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Shifts SET dateTime = ? WHERE shiftID = ?");
             preparedStatement.setTimestamp(1, shift.getDateTime());
@@ -74,7 +74,7 @@ public class ShiftDAOImpl implements ShiftDAO{
     }
 
     @Override
-    public List<Shift> getShifts() {
+    public List<Shift> getShifts(){
         List<Shift> shifts = new ArrayList<>();
         try{
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Shifts");
@@ -93,8 +93,8 @@ public class ShiftDAOImpl implements ShiftDAO{
     }
 
     @Override
-    public boolean isDoctorAvailable(int doctorID, Timestamp dateTime) {
-        try {
+    public boolean isDoctorAvailable(int doctorID, Timestamp dateTime){
+        try{
             Calendar cal = Calendar.getInstance();
             cal.setTime(dateTime);
             int year = cal.get(Calendar.YEAR);
@@ -104,15 +104,15 @@ public class ShiftDAOImpl implements ShiftDAO{
             int minute = cal.get(Calendar.MINUTE);
             int second = cal.get(Calendar.SECOND);
 
-            // Verificar que la hora sea exacta
-            if (minute != 0 || second != 0) {
+            // Verificar si la hora es exacta
+            if(minute != 0 || second != 0){
                 return false;
             }
 
-            //Verificar que la hora este dentro del rango de jornada
+            //Verificar si la hora esta entre el rango de trabajo
             Timestamp startOfDay = Timestamp.valueOf(String.format("%04d-%02d-%02d 10:00:00", year, month, day));
             Timestamp endOfDay = Timestamp.valueOf(String.format("%04d-%02d-%02d 19:00:00", year, month, day));
-            if (dateTime.before(startOfDay) || dateTime.after(endOfDay)) {
+            if(dateTime.before(startOfDay) || dateTime.after(endOfDay)){
                 return false;
             }
 
@@ -120,16 +120,15 @@ public class ShiftDAOImpl implements ShiftDAO{
             cal.add(Calendar.HOUR_OF_DAY, 1);
             Timestamp nextHourDateTime = new Timestamp(cal.getTimeInMillis());
 
-            String sql = "SELECT COUNT(*) FROM Shifts WHERE doctorID = ? AND dateTime >= ? AND dateTime < ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM Shifts WHERE doctorID = ? AND dateTime >= ? AND dateTime < ?");
             preparedStatement.setInt(1, doctorID);
             preparedStatement.setTimestamp(2, startDateTime);
             preparedStatement.setTimestamp(3, nextHourDateTime);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
+            if(resultSet.next()){
                 return resultSet.getInt(1) == 0;
             }
-        } catch (Exception e) {
+        }catch(Exception e){
             e.printStackTrace();
         }
         return false;
@@ -156,26 +155,25 @@ public class ShiftDAOImpl implements ShiftDAO{
     }
 
     @Override
-    public List<ReportData> getReportDataForDoctor(int doctorID, Timestamp startDate, Timestamp endDate) throws Exception {
+    public List<ReportData> getReportDataForDoctor(int doctorID, Timestamp startDate, Timestamp endDate) throws Exception{
         List<ReportData> reportDataList = new ArrayList<>();
-        try {
-            String sql = "SELECT dateTime AS date, COUNT(*) AS numberOfQueries, SUM(d.consultationCost) AS amountCharged " +
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT dateTime AS date, COUNT(*) AS numberOfQueries, SUM(d.consultationCost) AS amountCharged " +
                     "FROM Shifts s " +
                     "JOIN Doctors d ON s.doctorID = d.doctorID " +
                     "WHERE s.doctorID = ? AND s.dateTime BETWEEN ? AND ? " +
-                    "GROUP BY dateTime";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                    "GROUP BY dateTime");
             preparedStatement.setInt(1, doctorID);
             preparedStatement.setTimestamp(2, startDate);
             preparedStatement.setTimestamp(3, endDate);
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
+            while(resultSet.next()){
                 Timestamp date = resultSet.getTimestamp("date");
                 int numberOfQueries = resultSet.getInt("numberOfQueries");
                 double amountCharged = resultSet.getDouble("amountCharged");
                 reportDataList.add(new ReportData(date, amountCharged, numberOfQueries));
             }
-        } catch (SQLException e) {
+        } catch (SQLException e){
             throw new Exception("Error generating report data", e);
         }
         return reportDataList;

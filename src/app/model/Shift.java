@@ -2,7 +2,7 @@ package app.model;
 
 import java.sql.Timestamp;
 
-public class Shift {
+public class Shift{
     private int shiftID;
     private int doctorID;
     private int patientID;
@@ -21,35 +21,35 @@ public class Shift {
         this.dateTime = dateTime;
     }
 
-    public int getShiftID() {
+    public int getShiftID(){
         return shiftID;
     }
 
-    public int getDoctorID() {
+    public int getDoctorID(){
         return doctorID;
     }
 
-    public int getPatientID() {
+    public int getPatientID(){
         return patientID;
     }
 
-    public Timestamp getDateTime() {
+    public Timestamp getDateTime(){
         return dateTime;
     }
 
-    public void setShiftID(int shiftID) {
+    public void setShiftID(int shiftID){
         this.shiftID = shiftID;
     }
 
-    public void setDoctorID(int doctorID) {
+    public void setDoctorID(int doctorID){
         this.doctorID = doctorID;
     }
 
-    public void setPatientID(int patientID) {
+    public void setPatientID(int patientID){
         this.patientID = patientID;
     }
 
-    public void setDateTime(Timestamp dateTime) {
+    public void setDateTime(Timestamp dateTime){
         this.dateTime = dateTime;
     }
 }

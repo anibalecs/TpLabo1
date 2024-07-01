@@ -35,7 +35,7 @@ public class PatientViewPanel extends JPanel{
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        //seleccionar el paciente
+        //seleccionar paciente
         JPanel formPanel = new JPanel(new GridLayout(3, 1));
         formPanel.add(new JLabel("Patient id:"));
         patientIDField = new JTextField();
@@ -58,10 +58,9 @@ public class PatientViewPanel extends JPanel{
 
     private void updateTableWithPatientShifts(int patientId) throws Exception{
         List<Shift> shifts = shiftService.getShiftsByPatientID(patientId);
-        tableModel.setRowCount(0); //Para limpiar la tabla antes de actualizar
+        tableModel.setRowCount(0); //para limpiar la tabla antes de actualizar
         for(Shift shift : shifts){
             Doctor doctor = doctorService.getDoctor(shift.getDoctorID());
-            System.out.println(shift.getDoctorID());
             Object[] row = {
                     shift.getDateTime().toLocalDateTime().toLocalDate(),
                     shift.getDateTime().toLocalDateTime().toLocalTime(),

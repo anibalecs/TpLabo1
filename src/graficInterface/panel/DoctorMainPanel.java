@@ -7,7 +7,7 @@ public class DoctorMainPanel extends JPanel{
     private CardLayout cardLayout;
     private JPanel doctorPanel;
 
-    public DoctorMainPanel(CardLayout cardLayout, JPanel mainPanel){
+    public DoctorMainPanel(CardLayout cardLayout, JPanel mainPanel) throws Exception {
         this.cardLayout = cardLayout;
         setLayout(new BorderLayout());
 

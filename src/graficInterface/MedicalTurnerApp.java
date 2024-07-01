@@ -19,7 +19,11 @@ public class MedicalTurnerApp{
 
             //Agrega paneles
             mainPanel.add(new LogInPanel(cardLayout, mainPanel), "LogInPanel");
-            mainPanel.add(new DoctorMainPanel(cardLayout, mainPanel), "DoctorPanel");
+            try {
+                mainPanel.add(new DoctorMainPanel(cardLayout, mainPanel), "DoctorPanel");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             mainPanel.add(new PatientViewPanel(), "PatientPanel");
 
             frame.setVisible(true);

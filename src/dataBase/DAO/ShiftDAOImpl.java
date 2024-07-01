@@ -33,6 +33,7 @@ public class ShiftDAOImpl implements ShiftDAO{
         }
     }
 
+
     @Override
     public void deleteShift(int shiftID){
         try{
@@ -47,7 +48,7 @@ public class ShiftDAOImpl implements ShiftDAO{
     @Override
     public Shift getShift(int id){
         try{
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Shifts WHERE shiftsID = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Shifts WHERE shiftID = ?");
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){

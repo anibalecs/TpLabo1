@@ -36,7 +36,7 @@ public class ShiftPanel extends JPanel{
 
         setLayout(new BorderLayout());
 
-        String[] columnNames = {"shift ID", "Doctor", "Paciente", "Fecha y hora"};
+        String[] columnNames = {"shift ID", "Doctor", "Patient", "Date and Time"};
         tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
@@ -46,15 +46,15 @@ public class ShiftPanel extends JPanel{
         formPanel.add(new JLabel("Doctor:"));
         JComboBox<Doctor> doctorComboBox = new JComboBox<>();
         formPanel.add(doctorComboBox);
-        formPanel.add(new JLabel("Paciente:"));
+        formPanel.add(new JLabel("Patient:"));
         JComboBox<Patient> patientComboBox = new JComboBox<>();
         formPanel.add(patientComboBox);
-        formPanel.add(new JLabel("Fecha y hora(yyyy-MM-dd HH:mm):"));
+        formPanel.add(new JLabel("Date and Time(yyyy-MM-dd HH:mm):"));
         JTextField dateTimeField = new JTextField();
         formPanel.add(dateTimeField);
-        JButton addButton = new JButton("Agregar turno");
+        JButton addButton = new JButton("Add shift");
         formPanel.add(addButton);
-        JButton deleteButton = new JButton("Eliminar turno");
+        JButton deleteButton = new JButton("Delete shift");
         formPanel.add(deleteButton);
 
         add(formPanel, BorderLayout.SOUTH);
@@ -68,41 +68,41 @@ public class ShiftPanel extends JPanel{
                 Patient selectedPatient = (Patient) patientComboBox.getSelectedItem();
                 String dateTimeString = dateTimeField.getText();
                 if(selectedDoctor == null || selectedPatient == null || dateTimeString.isEmpty()){
-                    JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Please complete all fields", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 Timestamp dateTime = new Timestamp(dateTimeFormat.parse(dateTimeString).getTime());
 
                 if(!shiftService.isDoctorAvailable(selectedDoctor.getDoctorID(), dateTime)){
-                    JOptionPane.showMessageDialog(this, "El doctor no está disponible en esa fecha y hora.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "The doctor is not available on that date and time.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 Shift newShift = new Shift(selectedDoctor.getDoctorID(), selectedPatient.getPatientID(), dateTime);
                 shiftService.createShift(newShift);
                 updateTable();
-                JOptionPane.showMessageDialog(this, "Turno creado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Shift created successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             }catch(ParseException ex){
-                JOptionPane.showMessageDialog(this, "Formato de fecha u hora inválido. Por favor use yyyy-MM-dd para la fecha y HH:mm para la hora.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Invalid date or time format. Please use yyyy-MM-dd for the date and HH:mm for the time.", "Error", JOptionPane.ERROR_MESSAGE);
             }catch(Exception ex){
-                JOptionPane.showMessageDialog(this, "Error al crear el turno: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error creating shift: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         deleteButton.addActionListener(e->{
             int selectedRow = table.getSelectedRow();
             if(selectedRow == -1){
-                JOptionPane.showMessageDialog(this, "Seleccione un turno para eliminar", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Select a turn to eliminate", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             int shiftID = (int) table.getValueAt(selectedRow, 0);
             try{
                 shiftService.deleteShift(shiftID);
                 updateTable();
-                JOptionPane.showMessageDialog(this, "Turno eliminado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Shift successfully deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
             }catch(Exception ex){
-                JOptionPane.showMessageDialog(this, "Error al eliminar el turno: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error deleting shift:" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         updateTable();
@@ -115,7 +115,7 @@ public class ShiftPanel extends JPanel{
                 doctorComboBox.addItem(doctor);
             }
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Error al cargar doctores: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error loading doctors: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         doctorComboBox.setRenderer(new DefaultListCellRenderer(){
@@ -131,14 +131,14 @@ public class ShiftPanel extends JPanel{
         });
     }
 
-    private void loadPatients(JComboBox<Patient> patientComboBox){
+    public   void loadPatients(JComboBox<Patient> patientComboBox){
         try{
             List<Patient> patients = patientService.getPatients();
             for(Patient patient : patients){
                 patientComboBox.addItem(patient);
             }
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Error al cargar pacientes: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,"Error loading patients: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         patientComboBox.setRenderer(new DefaultListCellRenderer(){
@@ -154,7 +154,7 @@ public class ShiftPanel extends JPanel{
         });
     }
 
-    private void updateTable(){
+    public void updateTable(){
         tableModel.setRowCount(0);
         try{
             List<Shift> shifts = shiftService.getShifts();
